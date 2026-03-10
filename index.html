@@ -43,51 +43,18 @@
       font-size: 16px;
       line-height: 1.6;
     }
+    video {
+      width: 100%;
+      max-width: 420px;
+      height: auto;
+      border: 1px solid #ccc;
+      display: inline-block;
+      background: #000;
+    }
     .label {
       font-weight: bold;
       display: block;
       margin-bottom: 8px;
-    }
-    .video-link {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 180px;
-      padding: 20px;
-      text-decoration: none;
-      color: #1a1a1a;
-      border: 1px solid #cfcfcf;
-      background: linear-gradient(135deg, #f8f8f8, #ececec);
-      border-radius: 8px;
-    }
-    .play-icon {
-      width: 68px;
-      height: 68px;
-      border-radius: 50%;
-      background: #d93025;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      margin-bottom: 14px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    }
-    .video-title {
-      font-weight: bold;
-      font-size: 18px;
-      margin-bottom: 6px;
-    }
-    .video-subtitle {
-      font-size: 14px;
-      color: #555;
-    }
-    .note {
-      margin-top: 14px;
-      font-size: 13px;
-      color: #666;
-      text-align: center;
     }
   </style>
 </head>
@@ -97,11 +64,10 @@
     <table>
       <tr>
         <td class="media-cell">
-          <a class="video-link" href="https://photos.google.com/photo/AF1QipOKk72vouClOrpvYBhoOaPA5_yMVKehOODZHUYp" target="_blank" rel="noopener noreferrer" aria-label="Open Video 1: Site Preparation">
-            <div class="play-icon">▶</div>
-            <div class="video-title">Open Video 1</div>
-            <div class="video-subtitle">Site Preparation</div>
-          </a>
+          <video controls preload="metadata">
+            <source src="VID-20251012-WA0045.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </td>
         <td class="desc-cell">
           <span class="label">Video 1: Site Preparation</span>
@@ -110,11 +76,10 @@
       </tr>
       <tr>
         <td class="media-cell">
-          <a class="video-link" href="https://photos.google.com/photo/AF1QipOUFB0KCcbDF2SBU7kygAo-pgsHgaR8XfN36Eyx" target="_blank" rel="noopener noreferrer" aria-label="Open Video 2: Foundation Construction">
-            <div class="play-icon">▶</div>
-            <div class="video-title">Open Video 2</div>
-            <div class="video-subtitle">Foundation Construction</div>
-          </a>
+          <video controls preload="metadata">
+            <source src="VID-20251012-WA0055.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </td>
         <td class="desc-cell">
           <span class="label">Video 2: Foundation Construction</span>
@@ -123,11 +88,10 @@
       </tr>
       <tr>
         <td class="media-cell">
-          <a class="video-link" href="https://photos.google.com/photo/AF1QipPpOgz-l4UllZ5oag5p3ucfFZyx_DpltwTRJX9X" target="_blank" rel="noopener noreferrer" aria-label="Open Video 3: Structural Elevation Progress">
-            <div class="play-icon">▶</div>
-            <div class="video-title">Open Video 3</div>
-            <div class="video-subtitle">Structural Elevation Progress</div>
-          </a>
+          <video controls preload="metadata">
+            <source src="VID-20251012-WA0079.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </td>
         <td class="desc-cell">
           <span class="label">Video 3: Structural Elevation Progress</span>
@@ -135,9 +99,6 @@
         </td>
       </tr>
     </table>
-    <div class="note">
-      Note: these are linked Google Photos videos. For direct embedded playback on the page, use shareable MP4 files or an embeddable video platform link.
-    </div>
   </div>
 </body>
 </html>
