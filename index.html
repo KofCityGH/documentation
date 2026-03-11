@@ -12,7 +12,7 @@
       --bg-1: #0f172a;
       --bg-2: #1e293b;
       --surface: rgba(255,255,255,0.92);
-      --surface-2: rgba(255,255,255,0.72);
+      --surface-2: rgba(255,255,255,0.74);
       --text: #0f172a;
       --muted: #475569;
       --line: rgba(148, 163, 184, 0.28);
@@ -24,7 +24,6 @@
     }
 
     * { box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -179,12 +178,14 @@
       text-align: right;
     }
 
-    .cards {
+    .cards,
+    .photo-cards {
       display: grid;
       gap: 24px;
     }
 
-    .card {
+    .card,
+    .photo-card {
       position: relative;
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
@@ -203,14 +204,16 @@
     .card:nth-child(2) { animation-delay: 0.12s; }
     .card:nth-child(3) { animation-delay: 0.24s; }
 
-    .media-wrap {
+    .media-wrap,
+    .photo-media {
       position: relative;
-      min-height: 340px;
+      min-height: 320px;
       background: linear-gradient(135deg, #dbeafe, #eff6ff);
       overflow: hidden;
     }
 
-    .media-wrap video {
+    .media-wrap video,
+    .photo-media img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -219,7 +222,8 @@
       background: #000;
     }
 
-    .card:hover .media-wrap video {
+    .card:hover .media-wrap video,
+    .photo-card:hover .photo-media img {
       transform: scale(1.03);
     }
 
@@ -250,7 +254,8 @@
       animation: pulse 1.8s infinite;
     }
 
-    .content {
+    .content,
+    .photo-content {
       padding: 28px 28px 26px;
       background:
         linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.96));
@@ -279,14 +284,16 @@
       border-radius: 999px;
     }
 
-    .content h3 {
+    .content h3,
+    .photo-content h3 {
       margin: 0 0 12px;
       font-size: 1.55rem;
       letter-spacing: -0.03em;
       color: #0f172a;
     }
 
-    .content p {
+    .content p,
+    .photo-content p {
       margin: 0;
       color: var(--muted);
       line-height: 1.78;
@@ -308,6 +315,12 @@
       color: #0f172a;
       background: #e2e8f0;
       border: 1px solid rgba(148,163,184,0.35);
+    }
+
+    .gallery-note {
+      margin-top: 6px;
+      color: rgba(226,232,240,0.72);
+      font-size: 0.96rem;
     }
 
     .footer-note {
@@ -334,8 +347,10 @@
     @media (max-width: 900px) {
       .hero { padding: 28px; }
       .stats { grid-template-columns: 1fr; }
-      .card { grid-template-columns: 1fr; }
-      .media-wrap { min-height: 260px; }
+      .card,
+      .photo-card { grid-template-columns: 1fr; }
+      .media-wrap,
+      .photo-media { min-height: 260px; }
       .section-title { align-items: flex-start; flex-direction: column; }
       .section-title .sub { text-align: left; }
     }
@@ -343,9 +358,11 @@
     @media (max-width: 560px) {
       .page { width: min(100% - 18px, 1180px); margin: 16px auto 34px; }
       .hero { border-radius: 24px; padding: 22px; }
-      .content { padding: 22px; }
+      .content,
+      .photo-content { padding: 22px; }
       h1 { font-size: 2rem; }
-      .content h3 { font-size: 1.3rem; }
+      .content h3,
+      .photo-content h3 { font-size: 1.3rem; }
     }
   </style>
 </head>
@@ -358,7 +375,7 @@
       <h1>Construction Progress Overview</h1>
       <p>
         A visual summary of major construction milestones, from site preparation to structural elevation.
-        Each section includes a video and a concise description to document visible progress in a professional, easy-to-review format.
+        Each section includes videos and additional image documentation with concise descriptions for easy review and sharing.
       </p>
 
       <div class="stats">
@@ -367,16 +384,19 @@
           <span>Recorded progress videos</span>
         </div>
         <div class="stat">
-          <strong>Start → Structure</strong>
-          <span>Coverage from groundwork to building form</span>
+          <strong>12</strong>
+          <span>Additional project photos</span>
         </div>
-    
+        <div class="stat">
+          <strong>Groundwork → Finishing</strong>
+          <span>Coverage across multiple construction stages</span>
+        </div>
       </div>
     </section>
 
     <div class="section-title">
-      <h2>Progress Stages</h2>
-      <div class="sub"> Designed for sharing, documentation, and project updates</div>
+      <h2>Progress Videos</h2>
+      <div class="sub">Designed for sharing, documentation, and project updates</div>
     </div>
 
     <section class="cards">
@@ -443,6 +463,173 @@
             <span class="chip">Roof structure</span>
             <span class="chip">Major milestone</span>
           </div>
+        </div>
+      </article>
+    </section>
+
+    <div class="section-title">
+      <h2>Additional Photo Documentation</h2>
+      <div class="sub">Each image includes a short description in the adjacent content area</div>
+    </div>
+
+    <div class="gallery-note">
+      These additional pictures were added from the uploaded document to expand the project photo documentation on the site.
+    </div>
+
+    <section class="photo-cards">
+      <article class="photo-card">
+        <div class="photo-media">
+          <img src="ghana_project_images/photo_01.png" alt="Interior Wall Construction" />
+        </div>
+        <div class="photo-content">
+          <div class="step">Photo 01</div>
+          <h3>Interior Wall Construction</h3>
+          <p>
+            Masonry work is underway inside the structure, with workers using scaffolding to raise the upper wall sections and shape the internal layout.
+          </p>
+        </div>
+      </article>
+
+      <article class="photo-card">
+        <div class="photo-media">
+          <img src="ghana_project_images/photo_02.png" alt="Front Structural View" />
+        </div>
+        <div class="photo-content">
+          <div class="step">Photo 02</div>
+          <h3>Front Structural View</h3>
+          <p>
+            The building shell is standing with the roof installed, showing the front elevation and the transition from structural work to enclosure.
+          </p>
+        </div>
+      </article>
+
+      <article class="photo-card">
+        <div class="photo-media">
+          <img src="ghana_project_images/photo_03.png" alt="Main Building Elevation" />
+        </div>
+        <div class="photo-content">
+          <div class="step">Photo 03</div>
+          <h3>Main Building Elevation</h3>
+          <p>
+            This image shows the two-level structure from the front, highlighting the roofline, block walls, and open bays awaiting finishing work.
+          </p>
+        </div>
+      </article>
+
+      <article class="photo-card">
+        <div class="photo-media">
+          <img src="ghana_project_images/photo_04.png" alt="Beam and Slab Support Stage" />
+        </div>
+        <div class="photo-content">
+          <div class="step">Photo 04</div>
+          <h3>Beam and Slab Support Stage</h3>
+          <p>
+            Temporary timber supports are holding the formwork in place as the reinforced beam and upper slab system are prepared and cured.
+          </p>
+        </div>
+      </article>
+
+      <article class="photo-card">
+        <div class="photo-media">
+          <img src="ghana_project_images/photo_05.png" alt="Column and Wall Formation" />
+        </div>
+        <div class="photo-content">
+          <div class="step">Photo 05</div>
+          <h3>Column and Wall Formation</h3>
+          <p>
+            Concrete columns and block walls are being developed together, defining the room layout and strengthening the structural frame.
+          </p>
+        </div>
+      </article>
+
+      <article class="photo-card">
+        <div class="photo-media">
+          <img src="ghana_project_images/photo_06.png" alt="Perimeter Structural Framing" />
+        </div>
+        <div class="photo-content">
+          <div class="step">Photo 06</div>
+          <h3>Perimeter Structural Framing</h3>
+          <p>
+            This side view captures extensive timber support under the slab edge, showing active progress on the reinforced upper structure.
+          </p>
+        </div>
+      </article>
+
+      <article class="photo-card">
+        <div class="photo-media">
+          <img src="ghana_project_images/photo_07.png" alt="Upper Wall Extension" />
+        </div>
+        <div class="photo-content">
+          <div class="step">Photo 07</div>
+          <h3>Upper Wall Extension</h3>
+          <p>
+            Workers continue lifting the wall height from an interior position, marking progress toward full enclosure of the upper level.
+          </p>
+        </div>
+      </article>
+
+      <article class="photo-card">
+        <div class="photo-media">
+          <img src="ghana_project_images/photo_08.png" alt="Site Grading and Earthwork" />
+        </div>
+        <div class="photo-content">
+          <div class="step">Photo 08</div>
+          <h3>Site Grading and Earthwork</h3>
+          <p>
+            The land is being cleared and leveled to prepare the surrounding area for access, drainage, and future external works.
+          </p>
+        </div>
+      </article>
+
+      <article class="photo-card">
+        <div class="photo-media">
+          <img src="ghana_project_images/photo_09.png" alt="Balcony and Exterior Finish Progress" />
+        </div>
+        <div class="photo-content">
+          <div class="step">Photo 09</div>
+          <h3>Balcony and Exterior Finish Progress</h3>
+          <p>
+            The upper balcony rails and exterior plastered surfaces are in place, indicating movement into visible finishing stages.
+          </p>
+        </div>
+      </article>
+
+      <article class="photo-card">
+        <div class="photo-media">
+          <img src="ghana_project_images/photo_10.png" alt="Side Perspective of Main House" />
+        </div>
+        <div class="photo-content">
+          <div class="step">Photo 10</div>
+          <h3>Side Perspective of Main House</h3>
+          <p>
+            This angled view shows the house massing and roof structure, giving a broader sense of scale and the project footprint.
+          </p>
+        </div>
+      </article>
+
+      <article class="photo-card">
+        <div class="photo-media">
+          <img src="ghana_project_images/photo_11.png" alt="Foundation Trench Excavation" />
+        </div>
+        <div class="photo-content">
+          <div class="step">Photo 11</div>
+          <h3>Foundation Trench Excavation</h3>
+          <p>
+            Workers are excavating foundation trenches, an early-stage activity that establishes the load-bearing base of the structure.
+          </p>
+        </div>
+      </article>
+
+      <article class="photo-card">
+        <div class="photo-media">
+          <img src="ghana_project_images/photo_12.png" alt="Boundary Wall Construction" />
+        </div>
+        <div class="photo-content">
+          <div class="step">Photo 12</div>
+          <h3>Boundary Wall Construction</h3>
+          <p>
+            The compound wall is being built around the property, improving enclosure, security, and overall site definition.
+          </p>
         </div>
       </article>
     </section>
