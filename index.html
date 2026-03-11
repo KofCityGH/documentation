@@ -11,8 +11,8 @@
     :root {
       --bg-1: #0f172a;
       --bg-2: #1e293b;
-      --surface: rgba(255,255,255,0.92);
-      --surface-2: rgba(255,255,255,0.72);
+      --surface: rgba(255,255,255,0.96);
+      --surface-soft: rgba(255,255,255,0.82);
       --text: #0f172a;
       --muted: #475569;
       --line: rgba(148, 163, 184, 0.28);
@@ -24,7 +24,6 @@
     }
 
     * { box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -187,7 +186,7 @@
     .card {
       position: relative;
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-columns: 1.05fr 0.95fr;
       gap: 0;
       background: var(--surface);
       color: var(--text);
@@ -210,142 +209,140 @@
       overflow: hidden;
     }
 
-    .media-wrap video {
+    .media-wrap img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
       transition: transform 0.6s ease;
-      background: #000;
+      background: #e2e8f0;
     }
 
-    .card:hover .media-wrap video {
-      transform: scale(1.03);
+    .card:hover .media-wrap img {
+      transform: scale(1.035);
     }
 
-    .badge {
+    .tag {
       position: absolute;
-      top: 18px;
       left: 18px;
-      z-index: 2;
+      top: 18px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
       padding: 10px 14px;
       border-radius: 999px;
-      background: rgba(15,23,42,0.72);
-      color: white;
-      font-size: 0.82rem;
+      background: rgba(15, 23, 42, 0.72);
+      color: #fff;
       font-weight: 700;
-      backdrop-filter: blur(6px);
-      box-shadow: 0 8px 24px rgba(15,23,42,0.16);
-    }
-
-    .play-pulse {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 0 0 rgba(14,165,233,0.55);
-      animation: pulse 1.8s infinite;
+      font-size: 0.88rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 20px rgba(15,23,42,0.18);
     }
 
     .content {
       padding: 28px 28px 26px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.96));
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,252,0.98));
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
 
-    .step {
+    .stage {
       display: inline-flex;
+      width: fit-content;
       align-items: center;
-      gap: 10px;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 0.8rem;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
-
-    .step::before {
-      content: "";
-      width: 30px;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), transparent);
+      gap: 8px;
+      padding: 8px 12px;
       border-radius: 999px;
+      background: rgba(14,165,233,0.09);
+      color: #0369a1;
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
     }
 
     .content h3 {
-      margin: 0 0 12px;
-      font-size: 1.55rem;
-      letter-spacing: -0.03em;
-      color: #0f172a;
+      margin: 14px 0 12px;
+      font-size: clamp(1.35rem, 2vw, 1.8rem);
+      line-height: 1.15;
     }
 
     .content p {
       margin: 0;
       color: var(--muted);
-      line-height: 1.78;
       font-size: 1rem;
+      line-height: 1.75;
     }
 
     .meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
       margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
     }
 
-    .chip {
-      padding: 9px 12px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #0f172a;
-      background: #e2e8f0;
-      border: 1px solid rgba(148,163,184,0.35);
+    .meta div {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface-soft);
+    }
+
+    .meta span {
+      display: block;
+      color: #64748b;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+
+    .meta strong {
+      color: var(--text);
+      font-size: 0.98rem;
     }
 
     .footer-note {
-      margin-top: 30px;
-      text-align: center;
-      color: rgba(226,232,240,0.72);
-      font-size: 0.96rem;
-      padding: 14px 18px 6px;
+      margin-top: 28px;
+      padding: 18px 22px;
+      color: rgba(226,232,240,0.88);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      line-height: 1.7;
     }
 
     @keyframes rise {
       to {
-        opacity: 1;
         transform: translateY(0);
+        opacity: 1;
       }
     }
 
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(14,165,233,0.45); }
-      70% { box-shadow: 0 0 0 12px rgba(14,165,233,0); }
-      100% { box-shadow: 0 0 0 0 rgba(14,165,233,0); }
-    }
-
     @media (max-width: 900px) {
-      .hero { padding: 28px; }
-      .stats { grid-template-columns: 1fr; }
-      .card { grid-template-columns: 1fr; }
-      .media-wrap { min-height: 260px; }
-      .section-title { align-items: flex-start; flex-direction: column; }
-      .section-title .sub { text-align: left; }
-    }
+      .stats,
+      .meta,
+      .card {
+        grid-template-columns: 1fr;
+      }
 
-    @media (max-width: 560px) {
-      .page { width: min(100% - 18px, 1180px); margin: 16px auto 34px; }
-      .hero { border-radius: 24px; padding: 22px; }
-      .content { padding: 22px; }
-      h1 { font-size: 2rem; }
-      .content h3 { font-size: 1.3rem; }
+      .hero {
+        padding: 28px;
+      }
+
+      .section-title {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .section-title .sub {
+        text-align: left;
+      }
+
+      .media-wrap {
+        min-height: 260px;
+      }
     }
   </style>
 </head>
@@ -354,104 +351,109 @@
 
   <main class="page">
     <section class="hero">
-      <div class="eyebrow">Project Progress Dashboard</div>
+      <div class="eyebrow">Project Documentation</div>
       <h1>Construction Progress Overview</h1>
       <p>
-        A polished visual summary of major construction milestones, from site preparation to structural elevation.
-        Each section includes a video and a concise description to document visible progress in a professional, easy-to-review format.
+        This HTML version presents the project images in a polished site layout, with a brief description placed beside each image to explain the visible stage of work and overall construction progress.
       </p>
 
       <div class="stats">
         <div class="stat">
           <strong>3</strong>
-          <span>Recorded progress videos</span>
+          <span>Progress snapshots documented</span>
         </div>
         <div class="stat">
-          <strong>Start → Structure</strong>
-          <span>Coverage from groundwork to building form</span>
+          <strong>Image + Description</strong>
+          <span>Each row pairs visual evidence with a short explanation</span>
         </div>
         <div class="stat">
-          <strong>Modern layout</strong>
-          <span>Responsive design with motion and visual polish</span>
+          <strong>HTML Ready</strong>
+          <span>Suitable for GitHub Pages, reports, or project documentation</span>
         </div>
       </div>
     </section>
 
     <div class="section-title">
-      <h2>Progress Stages</h2>
-      <div class="sub">Styled for sharing, documentation, and project updates</div>
+      <h2>Visual Progress Stages</h2>
+      <div class="sub">Each image includes a brief summary in the adjacent cell-style panel.</div>
     </div>
 
     <section class="cards">
       <article class="card">
         <div class="media-wrap">
-          <div class="badge"><span class="play-pulse"></span> Video 1</div>
-          <video controls preload="metadata" playsinline>
-            <source src="VID-20251012-WA0079.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          <div class="tag">Image 1</div>
+          <img src="site_preparation.png" alt="Site preparation stage" />
         </div>
         <div class="content">
-          <div class="step">Stage 01</div>
+          <div class="stage">Initial Phase</div>
           <h3>Site Preparation</h3>
           <p>
-            This video shows the early stage of the project after land clearing and grading. The ground has been leveled in preparation for layout and foundation work, marking the official start of visible construction activity on the site.
+            This image shows the early preparation of the construction site. The land appears to have been cleared and leveled to establish the footprint for the building. At this stage, the site is being organized to support layout planning, foundation work, and the next steps in structural development.
           </p>
           <div class="meta">
-            <span class="chip">Land clearing</span>
-            <span class="chip">Ground leveling</span>
-            <span class="chip">Project kickoff</span>
+            <div>
+              <span>Focus</span>
+              <strong>Ground readiness and layout setup</strong>
+            </div>
+            <div>
+              <span>Significance</span>
+              <strong>Prepares the site for foundation activities</strong>
+            </div>
           </div>
         </div>
       </article>
 
       <article class="card">
         <div class="media-wrap">
-          <div class="badge"><span class="play-pulse"></span> Video 2</div>
-          <video controls preload="metadata" playsinline>
-            <source src="VID-20251012-WA0045.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          <div class="tag">Image 2</div>
+          <img src="foundation_work.png" alt="Foundation and block work" />
         </div>
         <div class="content">
-          <div class="step">Stage 02</div>
+          <div class="stage">Structural Base</div>
           <h3>Foundation and Block Work</h3>
           <p>
-            This stage captures the foundation process, where the base structure and block layout begin to take shape. It highlights the footprint of the building and the early formation of rooms, support lines, and key structural boundaries.
+            This image captures the foundation stage of the project, where block work is being used to define the base structure of the building. The visible wall outlines suggest the layout of rooms and supporting sections, showing that the project has moved from ground preparation into permanent structural formation.
           </p>
           <div class="meta">
-            <span class="chip">Foundation phase</span>
-            <span class="chip">Block work</span>
-            <span class="chip">Structural layout</span>
+            <div>
+              <span>Focus</span>
+              <strong>Foundation structure and wall outlines</strong>
+            </div>
+            <div>
+              <span>Significance</span>
+              <strong>Confirms progress into core building construction</strong>
+            </div>
           </div>
         </div>
       </article>
 
       <article class="card">
         <div class="media-wrap">
-          <div class="badge"><span class="play-pulse"></span> Video 3</div>
-          <video controls preload="metadata" playsinline>
-            <source src="VID-20251012-WA0055.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          <div class="tag">Image 3</div>
+          <img src="structural_progress.png" alt="Advanced structural progress" />
         </div>
         <div class="content">
-          <div class="step">Stage 03</div>
-          <h3>Structural Elevation and Roofing</h3>
+          <div class="stage">Advanced Progress</div>
+          <h3>Structural Elevation Progress</h3>
           <p>
-            This video presents a more advanced stage of construction, where the exterior walls are up and the roof structure is in place. It reflects meaningful progress from groundwork to a clearly visible building form approaching the next finishing phases.
+            This image shows the project at a more advanced stage, with the exterior walls standing and the roof structure already installed. It reflects substantial progress from the initial foundation work to the visible building form, giving a strong indication that the project is moving closer to enclosure and finishing phases.
           </p>
           <div class="meta">
-            <span class="chip">Wall elevation</span>
-            <span class="chip">Roof structure</span>
-            <span class="chip">Major milestone</span>
+            <div>
+              <span>Focus</span>
+              <strong>Walls, roof structure, and overall form</strong>
+            </div>
+            <div>
+              <span>Significance</span>
+              <strong>Shows major advancement toward completion</strong>
+            </div>
           </div>
         </div>
       </article>
     </section>
 
     <div class="footer-note">
-      Built as a clean, responsive project progress page for web sharing, presentations, or documentation use.
+      Note: More pictures to come.
     </div>
   </main>
 </body>
