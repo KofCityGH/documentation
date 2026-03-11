@@ -3,341 +3,452 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Construction Progress Gallery</title>
+  <title>Construction Progress Overview</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg1: #0f172a;
-      --bg2: #1e3a5f;
-      --accent: #f59e0b;
-      --accent2: #22c55e;
+      --bg-1: #0f172a;
+      --bg-2: #1e293b;
+      --surface: rgba(255,255,255,0.92);
+      --surface-2: rgba(255,255,255,0.72);
       --text: #0f172a;
       --muted: #475569;
-      --surface: rgba(255,255,255,0.94);
-      --line: rgba(15, 23, 42, 0.12);
-      --shadow: 0 18px 40px rgba(2, 8, 23, 0.18);
-      --radius: 24px;
+      --line: rgba(148, 163, 184, 0.28);
+      --accent: #0ea5e9;
+      --accent-2: #22c55e;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+      --radius-lg: 28px;
+      --radius-md: 20px;
     }
 
     * { box-sizing: border-box; }
+
     html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
       font-family: 'Inter', Arial, sans-serif;
-      color: #e5eef8;
+      color: #e2e8f0;
       background:
-        radial-gradient(circle at top left, rgba(245,158,11,0.18), transparent 26%),
-        radial-gradient(circle at bottom right, rgba(34,197,94,0.16), transparent 22%),
-        linear-gradient(135deg, var(--bg1), var(--bg2));
+        radial-gradient(circle at top left, rgba(14,165,233,0.24), transparent 28%),
+        radial-gradient(circle at top right, rgba(34,197,94,0.18), transparent 24%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
       min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .background-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0.06));
+      pointer-events: none;
     }
 
     .page {
-      width: min(1150px, calc(100% - 32px));
-      margin: 32px auto 56px;
+      width: min(1180px, calc(100% - 32px));
+      margin: 34px auto 60px;
+      position: relative;
+      z-index: 1;
     }
 
     .hero {
       position: relative;
-      overflow: hidden;
-      padding: 36px;
+      padding: 42px;
+      border: 1px solid rgba(255,255,255,0.12);
       border-radius: 32px;
-      border: 1px solid rgba(255,255,255,0.14);
       background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
       box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(10px);
+      opacity: 0.9;
     }
 
     .hero::before {
-      content: "";
-      position: absolute;
-      right: -30px;
-      top: -30px;
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: rgba(245,158,11,0.14);
-      filter: blur(8px);
+      width: 220px;
+      height: 220px;
+      right: -40px;
+      top: -50px;
+      background: rgba(14, 165, 233, 0.18);
     }
 
-    .kicker {
+    .hero::after {
+      width: 180px;
+      height: 180px;
+      left: -30px;
+      bottom: -60px;
+      background: rgba(34, 197, 94, 0.16);
+    }
+
+    .eyebrow {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 14px;
+      padding: 10px 16px;
       border-radius: 999px;
       background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.14);
-      font-size: 0.82rem;
+      color: #dbeafe;
       font-weight: 700;
+      font-size: 0.82rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.14);
     }
 
-    .kicker::before {
+    .eyebrow::before {
       content: "";
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      box-shadow: 0 0 0 6px rgba(255,255,255,0.05);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 0 6px rgba(255,255,255,0.06);
     }
 
     h1 {
-      margin: 18px 0 12px;
-      font-size: clamp(2rem, 4vw, 3.4rem);
-      line-height: 1.05;
+      margin: 18px 0 14px;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      line-height: 1.02;
       letter-spacing: -0.03em;
+      max-width: 780px;
     }
 
     .hero p {
       margin: 0;
-      max-width: 770px;
-      font-size: 1.04rem;
+      max-width: 760px;
+      color: rgba(226,232,240,0.9);
       line-height: 1.75;
-      color: rgba(229,238,248,0.9);
+      font-size: 1.06rem;
     }
 
-    .summary {
-      margin-top: 22px;
+    .stats {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
+      margin-top: 26px;
     }
 
-    .pill {
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 18px;
-      padding: 16px;
-    }
-
-    .pill strong {
-      display: block;
-      color: #fff;
-      font-size: 1.25rem;
-      margin-bottom: 4px;
-    }
-
-    .pill span { color: rgba(229,238,248,0.88); }
-
-    .section-head {
-      margin: 28px 0 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 14px;
-    }
-
-    .section-head h2 {
-      margin: 0;
-      font-size: clamp(1.35rem, 2vw, 2rem);
-      color: #fff;
-    }
-
-    .section-head p {
-      margin: 0;
-      color: rgba(229,238,248,0.76);
-      text-align: right;
-    }
-
-    .table-wrap {
-      border-radius: 28px;
-      overflow: hidden;
-      background: var(--surface);
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255,255,255,0.35);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-      color: var(--text);
-      background: var(--surface);
-    }
-
-    td {
-      border: 1px solid var(--line);
-      vertical-align: middle;
-      padding: 18px;
-    }
-
-    .media-cell {
-      width: 42%;
-      background: linear-gradient(180deg, #f8fafc, #eef2f7);
-    }
-
-    .media-card {
-      position: relative;
-      overflow: hidden;
-      border-radius: 20px;
-      background: #fff;
-      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.10);
-      animation: rise 0.7s ease both;
-    }
-
-    tr:nth-child(2) .media-card { animation-delay: 0.1s; }
-    tr:nth-child(3) .media-card { animation-delay: 0.2s; }
-
-    .media-card img {
-      width: 100%;
-      height: 280px;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.6s ease;
-    }
-
-    .media-card:hover img { transform: scale(1.04); }
-
-    .tag {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: #fff;
-      background: rgba(15,23,42,0.72);
-      backdrop-filter: blur(6px);
-    }
-
-    .desc-cell {
-      width: 58%;
-      background: #fff;
-    }
-
-    .stage {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #0f766e;
-      background: #ecfeff;
-      border: 1px solid #bae6fd;
-      padding: 8px 12px;
-      border-radius: 999px;
-      margin-bottom: 12px;
-    }
-
-    .desc-cell h3 {
-      margin: 0 0 10px;
-      font-size: 1.5rem;
-      color: #0f172a;
-    }
-
-    .desc-cell p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.8;
-      font-size: 1rem;
-    }
-
-    .footer-note {
-      margin-top: 16px;
-      padding: 14px 16px;
-      border-radius: 18px;
+    .stat {
       background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.10);
-      color: rgba(229,238,248,0.9);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 18px 18px 16px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.45rem;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    .stat span {
+      color: rgba(226,232,240,0.88);
       font-size: 0.95rem;
     }
 
-    @keyframes rise {
-      from { opacity: 0; transform: translateY(18px); }
-      to { opacity: 1; transform: translateY(0); }
+    .section-title {
+      margin: 34px 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
     }
 
-    @media (max-width: 860px) {
-      .summary { grid-template-columns: 1fr; }
-      .section-head { display: block; }
-      .section-head p { text-align: left; margin-top: 6px; }
-      table, tbody, tr, td { display: block; width: 100%; }
-      td { border-left: 0; border-right: 0; }
-      .media-cell, .desc-cell { width: 100%; }
-      .media-card img { height: 240px; }
+    .section-title h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 2vw, 2rem);
+      color: white;
+    }
+
+    .section-title .sub {
+      color: rgba(226,232,240,0.74);
+      font-size: 0.98rem;
+      text-align: right;
+    }
+
+    .cards {
+      display: grid;
+      gap: 24px;
+    }
+
+    .card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 0;
+      background: var(--surface);
+      color: var(--text);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.4);
+      transform: translateY(24px);
+      opacity: 0;
+      animation: rise 0.8s ease forwards;
+    }
+
+    .card:nth-child(2) { animation-delay: 0.12s; }
+    .card:nth-child(3) { animation-delay: 0.24s; }
+
+    .media-wrap {
+      position: relative;
+      min-height: 340px;
+      background: linear-gradient(135deg, #dbeafe, #eff6ff);
+      overflow: hidden;
+    }
+
+    .media-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+      background: #000;
+    }
+
+    .card:hover .media-wrap video {
+      transform: scale(1.03);
+    }
+
+    .badge {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.72);
+      color: white;
+      font-size: 0.82rem;
+      font-weight: 700;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 8px 24px rgba(15,23,42,0.16);
+    }
+
+    .play-pulse {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 0 rgba(14,165,233,0.55);
+      animation: pulse 1.8s infinite;
+    }
+
+    .content {
+      padding: 28px 28px 26px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.96));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .step {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.8rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .step::before {
+      content: "";
+      width: 30px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      border-radius: 999px;
+    }
+
+    .content h3 {
+      margin: 0 0 12px;
+      font-size: 1.55rem;
+      letter-spacing: -0.03em;
+      color: #0f172a;
+    }
+
+    .content p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.78;
+      font-size: 1rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .chip {
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #0f172a;
+      background: #e2e8f0;
+      border: 1px solid rgba(148,163,184,0.35);
+    }
+
+    .footer-note {
+      margin-top: 30px;
+      text-align: center;
+      color: rgba(226,232,240,0.72);
+      font-size: 0.96rem;
+      padding: 14px 18px 6px;
+    }
+
+    @keyframes rise {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(14,165,233,0.45); }
+      70% { box-shadow: 0 0 0 12px rgba(14,165,233,0); }
+      100% { box-shadow: 0 0 0 0 rgba(14,165,233,0); }
+    }
+
+    @media (max-width: 900px) {
+      .hero { padding: 28px; }
+      .stats { grid-template-columns: 1fr; }
+      .card { grid-template-columns: 1fr; }
+      .media-wrap { min-height: 260px; }
+      .section-title { align-items: flex-start; flex-direction: column; }
+      .section-title .sub { text-align: left; }
+    }
+
+    @media (max-width: 560px) {
+      .page { width: min(100% - 18px, 1180px); margin: 16px auto 34px; }
+      .hero { border-radius: 24px; padding: 22px; }
+      .content { padding: 22px; }
+      h1 { font-size: 2rem; }
+      .content h3 { font-size: 1.3rem; }
     }
   </style>
 </head>
 <body>
+  <div class="background-grid"></div>
+
   <main class="page">
     <section class="hero">
-      <div class="kicker">Construction Documentation</div>
+      <div class="eyebrow">Project Progress Dashboard</div>
       <h1>Construction Progress Overview</h1>
       <p>
-        Presenting each image with a short, clear description beside it.
+        A visual summary of major construction milestones, from site preparation to structural elevation.
+        Each section includes a video and a concise description to document visible progress in a professional, easy-to-review format.
       </p>
-      <div class="summary">
-        <div class="pill"><strong>3</strong><span>Project progress images</span></div>
-        <div class="pill"><strong>Brief</strong><span>Descriptions added beside each image</span></div>
-        <div class="pill"><strong>Updated</strong><span>Formatted as a responsive HTML page</span></div>
+
+      <div class="stats">
+        <div class="stat">
+          <strong>3</strong>
+          <span>Recorded progress videos</span>
+        </div>
+        <div class="stat">
+          <strong>Start → Structure</strong>
+          <span>Coverage from groundwork to building form</span>
+        </div>
+    
       </div>
     </section>
 
-    <div class="section-head">
-      <h2>Image Log and Descriptions</h2>
-      <p>Each image appears in the left cell, with its matching summary in the right cell.</p>
+    <div class="section-title">
+      <h2>Progress Stages</h2>
+      <div class="sub"> Designed for sharing, documentation, and project updates</div>
     </div>
 
-    <section class="table-wrap">
-      <table>
-        <tr>
-          <td class="media-cell">
-            <div class="media-card">
-              <span class="tag">Image 1</span>
-              <img src="site_preparation.png" alt="Prepared construction site" />
-            </div>
-          </td>
-          <td class="desc-cell">
-            <div class="stage">Early Phase</div>
-            <h3>Site Preparation</h3>
-            <p>
-              This image shows the project site after clearing and grading work. The land has been opened up and leveled to prepare for the building layout, creating a stable base for the next stage of foundation construction.
-            </p>
-          </td>
-        </tr>
-        <tr>
-          <td class="media-cell">
-            <div class="media-card">
-              <span class="tag">Image 2</span>
-              <img src="foundation_work.png" alt="Foundation and block work in progress" />
-            </div>
-          </td>
-          <td class="desc-cell">
-            <div class="stage">Structural Base</div>
-            <h3>Foundation and Block Work</h3>
-            <p>
-              This image captures the foundation stage, where block work has started to define the building footprint. The visible layout shows room divisions and structural lines taking shape as the project moves into formal construction.
-            </p>
-          </td>
-        </tr>
-        <tr>
-          <td class="media-cell">
-            <div class="media-card">
-              <span class="tag">Image 3</span>
-              <img src="structural_progress.png" alt="Building exterior with roof installed" />
-            </div>
-          </td>
-          <td class="desc-cell">
-            <div class="stage">Advanced Stage</div>
-            <h3>Structural Elevation and Roofing</h3>
-            <p>
-              This image shows the building at a more advanced stage, with the exterior walls already raised and the roof structure in place. It reflects major progress from the foundation phase to a visible and recognizable building form.
-            </p>
-          </td>
-        </tr>
-      </table>
+    <section class="cards">
+      <article class="card">
+        <div class="media-wrap">
+          <div class="badge"><span class="play-pulse"></span> Video 1</div>
+          <video controls preload="metadata" playsinline>
+            <source src="VID-20251012-WA0079.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="content">
+          <div class="step">Stage 01</div>
+          <h3>Site Preparation</h3>
+          <p>
+            This video shows the early stage of the project after land clearing and grading. The ground has been leveled in preparation for layout and foundation work, marking the official start of visible construction activity on the site.
+          </p>
+          <div class="meta">
+            <span class="chip">Land clearing</span>
+            <span class="chip">Ground leveling</span>
+            <span class="chip">Project kickoff</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="media-wrap">
+          <div class="badge"><span class="play-pulse"></span> Video 2</div>
+          <video controls preload="metadata" playsinline>
+            <source src="VID-20251012-WA0045.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="content">
+          <div class="step">Stage 02</div>
+          <h3>Foundation and Block Work</h3>
+          <p>
+            This stage captures the foundation process, where the base structure and block layout begin to take shape. It highlights the footprint of the building and the early formation of rooms, support lines, and key structural boundaries.
+          </p>
+          <div class="meta">
+            <span class="chip">Foundation phase</span>
+            <span class="chip">Block work</span>
+            <span class="chip">Structural layout</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="media-wrap">
+          <div class="badge"><span class="play-pulse"></span> Video 3</div>
+          <video controls preload="metadata" playsinline>
+            <source src="VID-20251012-WA0055.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="content">
+          <div class="step">Stage 03</div>
+          <h3>Structural Elevation and Roofing</h3>
+          <p>
+            This video presents a more advanced stage of construction, where the exterior walls are up and the roof structure is in place. It reflects meaningful progress from groundwork to a clearly visible building form approaching the next finishing phases.
+          </p>
+          <div class="meta">
+            <span class="chip">Wall elevation</span>
+            <span class="chip">Roof structure</span>
+            <span class="chip">Major milestone</span>
+          </div>
+        </div>
+      </article>
     </section>
 
     <div class="footer-note">
-      Site showcase page with dates, captions, and a timeline section.
+      Project progress page for web sharing, presentations, or documentation use.
     </div>
   </main>
 </body>
