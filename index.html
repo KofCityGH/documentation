@@ -3,823 +3,937 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Construction Progress Overview</title>
+  <title>Construction Progress — Site Journal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg-1: #0f172a;
-      --bg-2: #1e293b;
-      --surface: rgba(255,255,255,0.92);
-      --surface-2: rgba(255,255,255,0.74);
-      --text: #0f172a;
-      --muted: #475569;
-      --line: rgba(148, 163, 184, 0.28);
-      --accent: #0ea5e9;
-      --accent-2: #22c55e;
-      --shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
-      --radius-lg: 28px;
-      --radius-md: 20px;
-    }
-
-    * { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
+    :root {
+      --s1:  #ff9500; /* Stage 1 — orange  */
+      --s2:  #0099ff; /* Stage 2 — blue    */
+      --s3:  #00c896; /* Stage 3 — teal    */
+      --s46: #8b5cf6; /* Stage 4–6 — violet*/
+      --coral:  #ff5c7a;
+      --ink:    #0d1117;
+      --body:   #2a3140;
+      --muted:  #68748a;
+      --faint:  #b0bad0;
+      --line:   #e3e8f2;
+      --bg:     #f4f7fd;
+      --card:   #ffffff;
+      --r:      10px;
+      --rlg:    18px;
+      --rxl:    24px;
+    }
+
     body {
-      margin: 0;
-      font-family: 'Inter', Arial, sans-serif;
-      color: #e2e8f0;
-      background:
-        radial-gradient(circle at top left, rgba(14,165,233,0.24), transparent 28%),
-        radial-gradient(circle at top right, rgba(34,197,94,0.18), transparent 24%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--body);
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    .background-grid {
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-      background-size: 34px 34px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0.06));
-      pointer-events: none;
+    /* ─── RAINBOW TOP BAND ─── */
+    .top-band {
+      height: 6px;
+      background: linear-gradient(90deg,
+        var(--s1)  0%   25%,
+        var(--s2)  25%  50%,
+        var(--s3)  50%  75%,
+        var(--s46) 75%  100%
+      );
     }
 
-    .page {
-      width: min(1180px, calc(100% - 32px));
-      margin: 34px auto 60px;
-      position: relative;
-      z-index: 1;
-    }
-
+    /* ─── HERO ─── */
     .hero {
+      background: var(--card);
+      border-bottom: 2px solid var(--line);
+      padding: 0 48px;
       position: relative;
-      padding: 42px;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 32px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
-      backdrop-filter: blur(14px);
-      box-shadow: var(--shadow);
       overflow: hidden;
     }
-
-    .hero::before,
-    .hero::after {
-      content: "";
+    .hero-orbs {
+      position: absolute; inset: 0;
+      pointer-events: none; overflow: hidden;
+    }
+    .hero-orbs i {
       position: absolute;
-      border-radius: 999px;
-      filter: blur(10px);
-      opacity: 0.9;
+      border-radius: 50%;
+      opacity: 0.13;
     }
-
-    .hero::before {
-      width: 220px;
-      height: 220px;
-      right: -40px;
-      top: -50px;
-      background: rgba(14, 165, 233, 0.18);
-    }
-
-    .hero::after {
-      width: 180px;
-      height: 180px;
-      left: -30px;
-      bottom: -60px;
-      background: rgba(34, 197, 94, 0.16);
+    .hero-orbs i:nth-child(1) { width:300px;height:300px; background:var(--s1);  top:-100px; right:80px; }
+    .hero-orbs i:nth-child(2) { width:200px;height:200px; background:var(--s2);  top:30px;   right:-30px; }
+    .hero-orbs i:nth-child(3) { width:140px;height:140px; background:var(--s3);  bottom:-40px; right:300px; }
+    .hero-orbs i:nth-child(4) { width:90px; height:90px;  background:var(--s46); top:50px;   left:-20px; }
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 62px 0 52px;
+      position: relative; z-index: 1;
     }
 
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 16px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.10);
-      color: #dbeafe;
-      font-weight: 700;
-      font-size: 0.82rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      border: 1px solid rgba(255,255,255,0.14);
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--s2); background: #e6f3ff; border: 1.5px solid #b3d9ff;
+      border-radius: 999px; padding: 6px 14px; margin-bottom: 20px;
+    }
+    .eyebrow-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--s2);
+      animation: pulseRing 1.9s ease-in-out infinite;
+    }
+    @keyframes pulseRing {
+      0%,100% { box-shadow: 0 0 0 0 rgba(0,153,255,.5); }
+      55%     { box-shadow: 0 0 0 7px rgba(0,153,255,0); }
     }
 
-    .eyebrow::before {
-      content: "";
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 0 0 6px rgba(255,255,255,0.06);
+    .hero h1 {
+      font-size: clamp(2.6rem, 5vw, 4.6rem);
+      font-weight: 800; letter-spacing: -0.04em; line-height: 0.94;
+      color: var(--ink); margin-bottom: 22px;
+    }
+    .c1 { color: var(--s1); }
+    .c2 { color: var(--s2); }
+    .c3 { color: var(--s3); }
+
+    .hero-desc {
+      font-size: 1.04rem; color: var(--muted); line-height: 1.82;
+      max-width: 620px; margin-bottom: 36px;
     }
 
-    h1 {
-      margin: 18px 0 14px;
-      font-size: clamp(2rem, 4vw, 3.5rem);
-      line-height: 1.02;
-      letter-spacing: -0.03em;
-      max-width: 780px;
-    }
-
-    .hero p {
-      margin: 0;
-      max-width: 760px;
-      color: rgba(226,232,240,0.9);
-      line-height: 1.75;
-      font-size: 1.06rem;
-    }
-
+    /* stat pills */
     .stats {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 26px;
+      display: flex; flex-wrap: wrap; gap: 10px;
     }
-
     .stat {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 20px;
-      padding: 18px 18px 16px;
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 18px; border-radius: var(--rlg);
+      border: 1.5px solid var(--line); background: var(--card);
+      box-shadow: 0 2px 10px rgba(0,0,0,.04);
+    }
+    .stat-ico {
+      width: 40px; height: 40px; border-radius: var(--r);
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+    }
+    .stat:nth-child(1) .stat-ico { background:#fff3e0; }
+    .stat:nth-child(2) .stat-ico { background:#e0f0ff; }
+    .stat:nth-child(3) .stat-ico { background:#e0fff8; }
+    .stat:nth-child(4) .stat-ico { background:#ede8ff; }
+    .stat strong { display:block; font-size:1.45rem; font-weight:800; color:var(--ink); line-height:1; margin-bottom:2px; }
+    .stat span   { font-size:0.8rem; color:var(--muted); }
+
+    /* ─── PROGRESS BAR ─── */
+    .prog-bar {
+      background: var(--card); border-bottom: 2px solid var(--line); padding: 16px 48px;
+    }
+    .prog-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .prog-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); white-space: nowrap;
+    }
+    .prog-track {
+      flex: 1; height: 10px; border-radius: 999px; background: var(--line); overflow: hidden;
+    }
+    .prog-fill {
+      height: 100%; border-radius: 999px;
+      background: linear-gradient(90deg, var(--s3), var(--s2), var(--s1));
+      background-size: 200% 100%;
+      width: 0;
+      animation: fillGrow 1.4s cubic-bezier(.22,1,.36,1) forwards, shimmer 3s linear infinite 1.5s;
+    }
+    @keyframes fillGrow { to { width: 72%; } }
+    @keyframes shimmer {
+      0%   { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+    .prog-pct {
+      font-family: 'Space Mono', monospace; font-size: 0.8rem; font-weight: 700;
+      color: var(--ink); white-space: nowrap;
     }
 
-    .stat strong {
-      display: block;
-      font-size: 1.45rem;
-      margin-bottom: 6px;
-      color: #fff;
+    /* ─── STICKY NAV ─── */
+    .snav {
+      background: var(--card); border-bottom: 2px solid var(--line);
+      padding: 10px 48px; position: sticky; top: 0; z-index: 200;
+    }
+    .snav-row {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+    }
+    .snp {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); background: var(--bg); border: 1.5px solid var(--line);
+      border-radius: 999px; padding: 7px 15px; white-space: nowrap;
+      text-decoration: none; transition: all .15s; cursor: pointer; flex-shrink: 0;
+    }
+    .snp:hover { border-color: var(--s2); color: var(--s2); background: #e6f3ff; }
+    .snp.active { background: var(--s2); border-color: var(--s2); color: #fff; }
+    .snp.s1 { --c: var(--s1); }
+    .snp.s2 { --c: var(--s2); }
+    .snp.s3 { --c: var(--s3); }
+    .snp.s46 { --c: var(--s46); }
+    .snp.s1:hover { border-color:var(--s1); color:var(--s1); background:#fff3e0; }
+    .snp.s2:hover { border-color:var(--s2); color:var(--s2); background:#e6f3ff; }
+    .snp.s3:hover { border-color:var(--s3); color:var(--s3); background:#e0fff8; }
+    .snp.s46:hover{ border-color:var(--s46);color:var(--s46);background:#ede8ff; }
+
+    /* ─── SECTION TITLE ─── */
+    .sec {
+      max-width: 1200px; margin: 0 auto; padding: 52px 48px 24px;
+    }
+    .sec-head {
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 14px;
+    }
+    .sec-head h2 {
+      font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+      font-weight: 800; letter-spacing: -0.03em; color: var(--ink);
+    }
+    .sec-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); padding-bottom: 4px;
     }
 
-    .stat span {
-      color: rgba(226,232,240,0.88);
-      font-size: 0.95rem;
+    /* ─── VIDEO GRID ─── */
+    .vgrid {
+      max-width: 1200px; margin: 0 auto; padding: 0 48px 8px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px;
     }
 
-    .section-title {
-      margin: 34px 0 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+    .vcard {
+      background: var(--card); border: 2px solid var(--line);
+      border-radius: var(--rxl); overflow: hidden; display: flex; flex-direction: column;
+      opacity: 0; transform: translateY(22px);
+      animation: rise .6s ease forwards;
+      transition: border-color .2s, box-shadow .2s, transform .22s;
+    }
+    .vcard:nth-child(2){animation-delay:.09s}
+    .vcard:nth-child(3){animation-delay:.18s}
+    .vcard:nth-child(4){animation-delay:.08s}
+    .vcard:nth-child(5){animation-delay:.16s}
+    .vcard:nth-child(6){animation-delay:.24s}
+    @keyframes rise { to { opacity:1; transform:translateY(0); } }
+
+    .vcard[data-s="1"]:hover { border-color:var(--s1);  box-shadow:0 8px 32px rgba(255,149,0,.15); transform:translateY(-4px); }
+    .vcard[data-s="2"]:hover { border-color:var(--s2);  box-shadow:0 8px 32px rgba(0,153,255,.14); transform:translateY(-4px); }
+    .vcard[data-s="3"]:hover { border-color:var(--s3);  box-shadow:0 8px 32px rgba(0,200,150,.14); transform:translateY(-4px); }
+    .vcard[data-s="4"]:hover { border-color:var(--s46); box-shadow:0 8px 32px rgba(139,92,246,.14); transform:translateY(-4px); }
+    .vcard[data-s="5"]:hover { border-color:var(--coral);box-shadow:0 8px 32px rgba(255,92,122,.14);transform:translateY(-4px); }
+    .vcard[data-s="6"]:hover { border-color:#22c55e;    box-shadow:0 8px 32px rgba(34,197,94,.14); transform:translateY(-4px); }
+
+    .vmedia {
+      position: relative; aspect-ratio: 16/10; background: #eef0f6; overflow: hidden;
+    }
+    .vmedia video { width:100%; height:100%; object-fit:cover; display:block; }
+
+    .vstage {
+      position: absolute; top: 12px; left: 12px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 5px 11px; border-radius: 999px; color: #fff;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .vcard[data-s="1"] .vstage { background: var(--s1); }
+    .vcard[data-s="2"] .vstage { background: var(--s2); }
+    .vcard[data-s="3"] .vstage { background: var(--s3); }
+    .vcard[data-s="4"] .vstage { background: var(--s46); }
+    .vcard[data-s="5"] .vstage { background: var(--coral); }
+    .vcard[data-s="6"] .vstage { background: #22c55e; }
+
+    .vdot {
+      width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.9);
+      animation: blink 1.7s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+    .vbody {
+      padding: 20px 22px 22px; display: flex; flex-direction: column; flex: 1;
+    }
+    .vnum {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 6px;
+    }
+    .vtitle {
+      font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em;
+      color: var(--ink); margin-bottom: 9px;
+    }
+    .vdesc { font-size: 0.88rem; color: var(--muted); line-height: 1.76; flex:1; }
+    .vtags { display:flex; flex-wrap:wrap; gap:6px; margin-top:15px; }
+    .vtag {
+      font-size: 0.73rem; font-weight: 600; padding: 4px 11px;
+      border-radius: 999px; border: 1.5px solid var(--line);
+      color: var(--muted); background: var(--bg);
     }
 
-    .section-title h2 {
-      margin: 0;
-      font-size: clamp(1.35rem, 2vw, 2rem);
-      color: white;
+    /* ─── PHOTO SECTION ─── */
+    .photo-wrap {
+      background: var(--card);
+      border-top: 2px solid var(--line);
+      padding-bottom: 70px;
+      margin-top: 24px;
     }
 
-    .section-title .sub {
-      color: rgba(226,232,240,0.74);
-      font-size: 0.98rem;
-      text-align: right;
+    /* stage block inside photos */
+    .stage-block {
+      max-width: 1200px; margin: 0 auto; padding: 0 48px;
+    }
+    .stage-block + .stage-block {
+      border-top: 2px dashed var(--line);
+      margin-top: 10px;
     }
 
-    .cards,
-    .photo-cards {
-      display: grid;
-      gap: 24px;
+    .stage-label-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 38px 0 20px;
+    }
+    .stage-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 7px 14px; border-radius: 999px; color: #fff;
+      flex-shrink: 0;
+    }
+    .s1-bg  { background: var(--s1); }
+    .s2-bg  { background: var(--s2); }
+    .s3-bg  { background: var(--s3); }
+    .s46-bg { background: var(--s46); }
+
+    .stage-name {
+      font-size: clamp(1rem, 1.6vw, 1.35rem);
+      font-weight: 800; letter-spacing: -0.02em; color: var(--ink);
+    }
+    .stage-count {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem; color: var(--faint); letter-spacing: 0.08em; text-transform: uppercase;
+      margin-left: auto;
     }
 
-    .card,
-    .photo-card {
-      position: relative;
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 0;
-      background: var(--surface);
-      color: var(--text);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255,255,255,0.4);
-      transform: translateY(24px);
-      opacity: 0;
-      animation: rise 0.8s ease forwards;
+    /* masonry within each stage */
+    .pmason {
+      columns: 3; column-gap: 16px;
     }
 
-    .card:nth-child(2) { animation-delay: 0.12s; }
-    .card:nth-child(3) { animation-delay: 0.24s; }
+    .pcard {
+      break-inside: avoid; margin-bottom: 16px;
+      border-radius: var(--rlg); overflow: hidden;
+      border: 2px solid var(--line); background: var(--card);
+      transition: border-color .2s, box-shadow .2s, transform .22s; cursor: pointer;
+    }
+    .pcard:hover { transform: translateY(-3px); }
 
-    .media-wrap,
-    .photo-media {
-      position: relative;
-      min-height: 320px;
-      background: linear-gradient(135deg, #dbeafe, #eff6ff);
-      overflow: hidden;
+    /* per-stage hover accents */
+    .stage-block[data-s="1"] .pcard:hover { border-color:var(--s1);  box-shadow:0 8px 26px rgba(255,149,0,.13); }
+    .stage-block[data-s="2"] .pcard:hover { border-color:var(--s2);  box-shadow:0 8px 26px rgba(0,153,255,.12); }
+    .stage-block[data-s="3"] .pcard:hover { border-color:var(--s3);  box-shadow:0 8px 26px rgba(0,200,150,.12); }
+    .stage-block[data-s="46"].pcard:hover { border-color:var(--s46); box-shadow:0 8px 26px rgba(139,92,246,.12); }
+
+    .pimg-wrap { position:relative; overflow:hidden; }
+    .pimg-wrap img {
+      width:100%; display:block;
+      transition: transform .45s ease; background: var(--bg);
+    }
+    .pcard:hover .pimg-wrap img { transform: scale(1.06); }
+
+    .poverlay {
+      position:absolute; inset:0;
+      background: linear-gradient(to top, rgba(13,17,23,.82) 0%, transparent 58%);
+      opacity:0; transition: opacity .26s;
+      display:flex; align-items:flex-end; padding:12px;
+    }
+    .pcard:hover .poverlay { opacity:1; }
+    .poverlay p { font-size:.8rem; color:rgba(255,255,255,.92); line-height:1.52; }
+
+    .pfoot {
+      padding: 9px 13px 11px;
+      display:flex; align-items:center; gap:9px;
+      border-top: 1.5px solid var(--line);
+    }
+    .pnum {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem; font-weight: 700; color: #fff;
+      padding: 3px 9px; border-radius: 999px; white-space: nowrap; flex-shrink: 0;
+    }
+    .stage-block[data-s="1"]  .pnum { background: var(--s1); }
+    .stage-block[data-s="2"]  .pnum { background: var(--s2); }
+    .stage-block[data-s="3"]  .pnum { background: var(--s3); }
+    .stage-block[data-s="46"] .pnum { background: var(--s46); }
+
+    .ptitle { font-size:.8rem; font-weight:700; color:var(--ink); line-height:1.3; }
+
+    /* connector line between stage blocks */
+    .stage-connector {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 48px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .conn-line { flex:1; height:1px; background: var(--line); }
+    .conn-arrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem; color: var(--faint);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      display:flex; align-items:center; gap:6px;
+    }
+    .conn-arrow::after { content:"↓"; font-size:.9rem; color:var(--faint); }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      background: var(--ink); padding: 32px 48px;
+    }
+    .footer-inner {
+      max-width:1200px; margin:0 auto;
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:12px;
+    }
+    .footer-brand { font-size:.95rem; font-weight:800; letter-spacing:-.02em; color:#fff; }
+    .footer-brand span { color:#ffcf60; }
+    .footer-chips { display:flex; gap:8px; flex-wrap:wrap; }
+    .fchip {
+      font-family:'Space Mono',monospace; font-size:.62rem; letter-spacing:.08em;
+      text-transform:uppercase; color:rgba(255,255,255,.44);
+      border:1px solid rgba(255,255,255,.1); border-radius:999px; padding:5px 12px;
     }
 
-    .media-wrap video,
-    .photo-media img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.6s ease;
-      background: #000;
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 960px) {
+      .pmason { columns: 2; }
+      .vgrid  { grid-template-columns: 1fr; }
+      .hero,.snav,.prog-bar,.sec,.vgrid,.stage-block,.stage-connector,.footer { padding-left:22px; padding-right:22px; }
     }
-
-    .card:hover .media-wrap video,
-    .photo-card:hover .photo-media img {
-      transform: scale(1.03);
-    }
-
-    .badge {
-      position: absolute;
-      top: 18px;
-      left: 18px;
-      z-index: 2;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(15,23,42,0.72);
-      color: white;
-      font-size: 0.82rem;
-      font-weight: 700;
-      backdrop-filter: blur(6px);
-      box-shadow: 0 8px 24px rgba(15,23,42,0.16);
-    }
-
-    .play-pulse {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 0 0 rgba(14,165,233,0.55);
-      animation: pulse 1.8s infinite;
-    }
-
-    .content,
-    .photo-content {
-      padding: 28px 28px 26px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.96));
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .step {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 0.8rem;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
-
-    .step::before {
-      content: "";
-      width: 30px;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-      border-radius: 999px;
-    }
-
-    .content h3,
-    .photo-content h3 {
-      margin: 0 0 12px;
-      font-size: 1.55rem;
-      letter-spacing: -0.03em;
-      color: #0f172a;
-    }
-
-    .content p,
-    .photo-content p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.78;
-      font-size: 1rem;
-    }
-
-    .meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .chip {
-      padding: 9px 12px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #0f172a;
-      background: #e2e8f0;
-      border: 1px solid rgba(148,163,184,0.35);
-    }
-
-    .gallery-note {
-      margin-top: 6px;
-      color: rgba(226,232,240,0.72);
-      font-size: 0.96rem;
-    }
-
-    .footer-note {
-      margin-top: 30px;
-      text-align: center;
-      color: rgba(226,232,240,0.72);
-      font-size: 0.96rem;
-      padding: 14px 18px 6px;
-    }
-
-    @keyframes rise {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(14,165,233,0.45); }
-      70% { box-shadow: 0 0 0 12px rgba(14,165,233,0); }
-      100% { box-shadow: 0 0 0 0 rgba(14,165,233,0); }
-    }
-
-    @media (max-width: 900px) {
-      .hero { padding: 28px; }
-      .stats { grid-template-columns: 1fr; }
-      .card,
-      .photo-card { grid-template-columns: 1fr; }
-      .media-wrap,
-      .photo-media { min-height: 260px; }
-      .section-title { align-items: flex-start; flex-direction: column; }
-      .section-title .sub { text-align: left; }
-    }
-
     @media (max-width: 560px) {
-      .page { width: min(100% - 18px, 1180px); margin: 16px auto 34px; }
-      .hero { border-radius: 24px; padding: 22px; }
-      .content,
-      .photo-content { padding: 22px; }
-      h1 { font-size: 2rem; }
-      .content h3,
-      .photo-content h3 { font-size: 1.3rem; }
+      .pmason   { columns: 1; }
+      .stats    { flex-direction: column; }
+      .footer-inner { flex-direction:column; align-items:flex-start; }
+      .stage-label-row { flex-wrap:wrap; }
+      .stage-count { margin-left:0; }
     }
   </style>
 </head>
+
 <body>
-  <div class="background-grid"></div>
 
-  <main class="page">
-    <section class="hero">
-      <div class="eyebrow">Project Progress Dashboard</div>
-      <h1>Construction Progress Overview</h1>
-      <p>
-        A visual summary of major construction milestones, from site preparation to structural elevation, gate installation, and finishing progress.
-        Each section includes videos and additional image documentation with concise descriptions for easy review and sharing.
-      </p>
+<div class="top-band"></div>
 
-      <div class="stats">
-        <div class="stat">
-          <strong>6</strong>
-          <span>Recorded progress videos</span>
+<!-- ══ HERO ══ -->
+<header class="hero">
+  <div class="hero-orbs" aria-hidden="true">
+    <i></i><i></i><i></i><i></i>
+  </div>
+  <div class="hero-inner">
+    <div class="eyebrow"><span class="eyebrow-dot"></span>Project Progress Dashboard</div>
+    <h1>
+      Building<br>
+      <span class="c1">Progress,</span><br>
+      <span class="c2">Stage</span> <span class="c3">by Stage.</span>
+    </h1>
+    <p class="hero-desc">
+      A full visual record of every major milestone — from raw earth and foundation trenches to
+      structural elevation, interior finishing, and a completed modern gate. Photos are
+      organized to follow the exact order of construction.
+    </p>
+    <div class="stats">
+      <div class="stat"><div class="stat-ico">🎬</div><div><strong>6</strong><span>Progress videos</span></div></div>
+      <div class="stat"><div class="stat-ico">📸</div><div><strong>21</strong><span>Site photos</span></div></div>
+      <div class="stat"><div class="stat-ico">🏗️</div><div><strong>4</strong><span>Build phases</span></div></div>
+      <div class="stat"><div class="stat-ico">⚡</div><div><strong>72%</strong><span>Completion est.</span></div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ══ PROGRESS BAR ══ -->
+<div class="prog-bar">
+  <div class="prog-inner">
+    <span class="prog-label">Overall progress</span>
+    <div class="prog-track"><div class="prog-fill"></div></div>
+    <span class="prog-pct">72% complete</span>
+  </div>
+</div>
+
+<!-- ══ STICKY NAV ══ -->
+<nav class="snav" aria-label="Jump to section">
+  <div class="snav-row">
+    <a href="#videos"  class="snp active">All videos</a>
+    <a href="#v-st1"   class="snp s1">01 · Site Prep</a>
+    <a href="#v-st2"   class="snp s2">02 · Foundation</a>
+    <a href="#v-st3"   class="snp s3">03 · Structure</a>
+    <a href="#v-st46"  class="snp s46">04–06 · Gate</a>
+    <span style="width:1px;height:22px;background:var(--line);flex-shrink:0;margin:0 4px;"></span>
+    <a href="#photos"  class="snp">📸 Photos by Stage</a>
+    <a href="#ph-s1"   class="snp s1">01 · Site Prep</a>
+    <a href="#ph-s2"   class="snp s2">02 · Foundation</a>
+    <a href="#ph-s3"   class="snp s3">03 · Structure</a>
+    <a href="#ph-s46"  class="snp s46">04–06 · Finishing</a>
+  </div>
+</nav>
+
+<!-- ══ VIDEOS ══ -->
+<div class="sec" id="videos">
+  <div class="sec-head">
+    <h2>Progress <span style="color:var(--s2)">Videos</span></h2>
+    <span class="sec-sub">6 recordings · Stage 01–06</span>
+  </div>
+</div>
+
+<div class="vgrid">
+
+  <article class="vcard" data-s="1" id="v-st1">
+    <div class="vmedia">
+      <video controls preload="metadata" playsinline>
+        <source src="VID-20251012-WA0079.mp4" type="video/mp4" />
+      </video>
+      <div class="vstage"><span class="vdot"></span>Stage 01</div>
+    </div>
+    <div class="vbody">
+      <div class="vnum">Stage 01 of 06</div>
+      <div class="vtitle">Site Preparation</div>
+      <p class="vdesc">Early footage after land clearing and grading. Ground levelled in preparation for layout and foundation work — the visible start of construction on site.</p>
+      <div class="vtags">
+        <span class="vtag">Land clearing</span>
+        <span class="vtag">Ground leveling</span>
+        <span class="vtag">Project kickoff</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="vcard" data-s="2" id="v-st2">
+    <div class="vmedia">
+      <video controls preload="metadata" playsinline>
+        <source src="VID-20251012-WA0045.mp4" type="video/mp4" />
+      </video>
+      <div class="vstage"><span class="vdot"></span>Stage 02</div>
+    </div>
+    <div class="vbody">
+      <div class="vnum">Stage 02 of 06</div>
+      <div class="vtitle">Foundation &amp; Block Work</div>
+      <p class="vdesc">Foundation process underway — base structure and block layout taking shape. Building footprint and early room and support boundaries are now visible.</p>
+      <div class="vtags">
+        <span class="vtag">Foundation</span>
+        <span class="vtag">Block work</span>
+        <span class="vtag">Structural layout</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="vcard" data-s="3" id="v-st3">
+    <div class="vmedia">
+      <video controls preload="metadata" playsinline>
+        <source src="VID-20251012-WA0055.mp4" type="video/mp4" />
+      </video>
+      <div class="vstage"><span class="vdot"></span>Stage 03</div>
+    </div>
+    <div class="vbody">
+      <div class="vnum">Stage 03 of 06</div>
+      <div class="vtitle">Structural Elevation &amp; Roofing</div>
+      <p class="vdesc">Exterior walls are up and the roof structure is in place — a major jump from groundwork to a clearly visible building form approaching the finishing phase.</p>
+      <div class="vtags">
+        <span class="vtag">Wall elevation</span>
+        <span class="vtag">Roof structure</span>
+        <span class="vtag">Major milestone</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="vcard" data-s="4" id="v-st46">
+    <div class="vmedia">
+      <video controls preload="metadata" playsinline>
+        <source src="VID-20260327-WA0007.mp4" type="video/mp4" />
+      </video>
+      <div class="vstage"><span class="vdot"></span>Stage 04</div>
+    </div>
+    <div class="vbody">
+      <div class="vnum">Stage 04 of 06</div>
+      <div class="vtitle">Gate Installation Progress</div>
+      <p class="vdesc">Installation of the main compound gate — alignment, fitting, and structural adjustments shown as the entrance system is put into position.</p>
+      <div class="vtags">
+        <span class="vtag">Metal works</span>
+        <span class="vtag">Installation</span>
+        <span class="vtag">Exterior upgrade</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="vcard" data-s="5">
+    <div class="vmedia">
+      <video controls preload="metadata" playsinline>
+        <source src="VID-20260327-WA0008.mp4" type="video/mp4" />
+      </video>
+      <div class="vstage"><span class="vdot"></span>Stage 05</div>
+    </div>
+    <div class="vbody">
+      <div class="vnum">Stage 05 of 06</div>
+      <div class="vtitle">Gate Functionality Check</div>
+      <p class="vdesc">Movement and operation demonstrated — confirming proper alignment, smooth swing, and overall structural stability before sign-off.</p>
+      <div class="vtags">
+        <span class="vtag">Testing</span>
+        <span class="vtag">Functionality</span>
+        <span class="vtag">Quality check</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="vcard" data-s="6">
+    <div class="vmedia">
+      <video controls preload="metadata" playsinline>
+        <source src="VID-20260327-WA0012.mp4" type="video/mp4" />
+      </video>
+      <div class="vstage"><span class="vdot"></span>Stage 06</div>
+    </div>
+    <div class="vbody">
+      <div class="vnum">Stage 06 of 06</div>
+      <div class="vtitle">Completed Gate Installation</div>
+      <p class="vdesc">Final gate video with the finished entrance system — reinforcing both the security and modern aesthetic of the property frontage.</p>
+      <div class="vtags">
+        <span class="vtag">Final stage</span>
+        <span class="vtag">Security</span>
+        <span class="vtag">Finishing</span>
+      </div>
+    </div>
+  </article>
+
+</div><!-- /vgrid -->
+
+<!-- ══ PHOTO SECTION ══ -->
+<div class="photo-wrap" id="photos">
+
+  <div class="sec" style="padding-bottom:8px;">
+    <div class="sec-head">
+      <h2>Photos <span style="color:var(--s3)">by Stage</span></h2>
+      <span class="sec-sub">21 images · Follows build sequence</span>
+    </div>
+  </div>
+
+  <!-- ── STAGE 01 ── -->
+  <div class="stage-block" data-s="1" id="ph-s1">
+    <div class="stage-label-row">
+      <div class="stage-badge s1-bg">● Stage 01</div>
+      <div class="stage-name">Site Preparation</div>
+      <div class="stage-count">1 photo</div>
+    </div>
+    <div class="pmason">
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="ghana_project_imagesphoto_08.jpg" alt="Site Grading and Earthwork" loading="lazy" />
+          <div class="poverlay"><p>Land cleared and leveled to prepare the area for access, drainage, and future external works.</p></div>
         </div>
-        <div class="stat">
-          <strong>21</strong>
-          <span>Total project photos</span>
-        </div>
-        <div class="stat">
-          <strong>Groundwork → Finishing</strong>
-          <span>Coverage across multiple construction stages</span>
+        <div class="pfoot">
+          <span class="pnum">S01·A</span>
+          <span class="ptitle">Site Grading &amp; Earthwork</span>
         </div>
       </div>
-    </section>
 
-    <div class="section-title">
-      <h2>Progress Videos</h2>
-      <div class="sub">Designed for sharing, documentation, and project updates</div>
     </div>
+  </div>
 
-    <section class="cards">
-      <article class="card">
-        <div class="media-wrap">
-          <div class="badge"><span class="play-pulse"></span> Video 1</div>
-          <video controls preload="metadata" playsinline>
-            <source src="VID-20251012-WA0079.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="content">
-          <div class="step">Stage 01</div>
-          <h3>Site Preparation</h3>
-          <p>
-            This video shows the early stage of the project after land clearing and grading. The ground has been leveled in preparation for layout and foundation work, marking the official start of visible construction activity on the site.
-          </p>
-          <div class="meta">
-            <span class="chip">Land clearing</span>
-            <span class="chip">Ground leveling</span>
-            <span class="chip">Project kickoff</span>
-          </div>
-        </div>
-      </article>
+  <!-- connector -->
+  <div class="stage-connector">
+    <div class="conn-line"></div>
+    <div class="conn-arrow">Next phase</div>
+    <div class="conn-line"></div>
+  </div>
 
-      <article class="card">
-        <div class="media-wrap">
-          <div class="badge"><span class="play-pulse"></span> Video 2</div>
-          <video controls preload="metadata" playsinline>
-            <source src="VID-20251012-WA0045.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="content">
-          <div class="step">Stage 02</div>
-          <h3>Foundation and Block Work</h3>
-          <p>
-            This stage captures the foundation process, where the base structure and block layout begin to take shape. It highlights the footprint of the building and the early formation of rooms, support lines, and key structural boundaries.
-          </p>
-          <div class="meta">
-            <span class="chip">Foundation phase</span>
-            <span class="chip">Block work</span>
-            <span class="chip">Structural layout</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="media-wrap">
-          <div class="badge"><span class="play-pulse"></span> Video 3</div>
-          <video controls preload="metadata" playsinline>
-            <source src="VID-20251012-WA0055.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="content">
-          <div class="step">Stage 03</div>
-          <h3>Structural Elevation and Roofing</h3>
-          <p>
-            This video presents a more advanced stage of construction, where the exterior walls are up and the roof structure is in place. It reflects meaningful progress from groundwork to a clearly visible building form approaching the next finishing phases.
-          </p>
-          <div class="meta">
-            <span class="chip">Wall elevation</span>
-            <span class="chip">Roof structure</span>
-            <span class="chip">Major milestone</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="media-wrap">
-          <div class="badge"><span class="play-pulse"></span> Video 4</div>
-          <video controls preload="metadata" playsinline>
-            <source src="VID-20260327-WA0007.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="content">
-          <div class="step">Stage 04</div>
-          <h3>Gate Installation Progress</h3>
-          <p>
-            This video captures the installation phase of the main compound gate, showing alignment, fitting, and structural adjustments as the entrance system is put into place.
-          </p>
-          <div class="meta">
-            <span class="chip">Metal works</span>
-            <span class="chip">Installation</span>
-            <span class="chip">Exterior upgrade</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="media-wrap">
-          <div class="badge"><span class="play-pulse"></span> Video 5</div>
-          <video controls preload="metadata" playsinline>
-            <source src="VID-20260327-WA0008.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="content">
-          <div class="step">Stage 05</div>
-          <h3>Gate Functionality Check</h3>
-          <p>
-            This video demonstrates the movement and functionality of the installed gate, helping confirm proper alignment, smooth operation, and overall structural stability.
-          </p>
-          <div class="meta">
-            <span class="chip">Testing</span>
-            <span class="chip">Functionality</span>
-            <span class="chip">Quality check</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="media-wrap">
-          <div class="badge"><span class="play-pulse"></span> Video 6</div>
-          <video controls preload="metadata" playsinline>
-            <source src="VID-20260327-WA0012.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-        <div class="content">
-          <div class="step">Stage 06</div>
-          <h3>Completed Gate Installation</h3>
-          <p>
-            This final gate video shows the completed entrance system with its finished appearance, reinforcing both the security and modern aesthetic of the property frontage.
-          </p>
-          <div class="meta">
-            <span class="chip">Final stage</span>
-            <span class="chip">Security</span>
-            <span class="chip">Finishing</span>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <div class="section-title">
-      <h2>Additional Photo Documentation</h2>
-      <div class="sub">Each image includes a short description in the adjacent content area</div>
+  <!-- ── STAGE 02 ── -->
+  <div class="stage-block" data-s="2" id="ph-s2">
+    <div class="stage-label-row">
+      <div class="stage-badge s2-bg">● Stage 02</div>
+      <div class="stage-name">Foundation &amp; Block Work</div>
+      <div class="stage-count">5 photos</div>
     </div>
+    <div class="pmason">
 
-    <div class="gallery-note">
-      These pictures are arranged from the earliest construction phase to the most current stage.
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="ghana_project_imagesphoto_11.jpg" alt="Foundation Trench Excavation" loading="lazy" />
+          <div class="poverlay"><p>Workers excavating foundation trenches — establishing the load-bearing base of the structure.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S02·A</span>
+          <span class="ptitle">Foundation Trench Excavation</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="ghana_project_imagesphoto_12.jpg" alt="Boundary Wall Construction" loading="lazy" />
+          <div class="poverlay"><p>Compound wall built around the property for enclosure, security, and site definition.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S02·B</span>
+          <span class="ptitle">Boundary Wall Construction</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="ghana_project_imagesphoto_05.jpg" alt="Column and Wall Formation" loading="lazy" />
+          <div class="poverlay"><p>Concrete columns and block walls developed together, defining room layout and strengthening the structural frame.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S02·C</span>
+          <span class="ptitle">Column &amp; Wall Formation</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="ghana_project_imagesphoto_04.jpg" alt="Beam and Slab Support" loading="lazy" />
+          <div class="poverlay"><p>Timber supports hold formwork in place as the reinforced beam and upper slab are prepared and cured.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S02·D</span>
+          <span class="ptitle">Beam &amp; Slab Support</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="ghana_project_imagesphoto_06.jpg" alt="Perimeter Structural Framing" loading="lazy" />
+          <div class="poverlay"><p>Extensive timber support under the slab edge — active progress on the reinforced upper structure.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S02·E</span>
+          <span class="ptitle">Perimeter Structural Framing</span>
+        </div>
+      </div>
+
     </div>
+  </div>
 
-    <section class="photo-cards">
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="ghana_project_imagesphoto_08.jpg" alt="Site Grading and Earthwork" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 01</div>
-          <h3>Site Grading and Earthwork</h3>
-          <p>
-            The land is being cleared and leveled to prepare the surrounding area for access, drainage, and future external works.
-          </p>
-        </div>
-      </article>
+  <!-- connector -->
+  <div class="stage-connector">
+    <div class="conn-line"></div>
+    <div class="conn-arrow">Next phase</div>
+    <div class="conn-line"></div>
+  </div>
 
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="ghana_project_imagesphoto_11.jpg" alt="Foundation Trench Excavation" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 02</div>
-          <h3>Foundation Trench Excavation</h3>
-          <p>
-            Workers are excavating foundation trenches, an early-stage activity that establishes the load-bearing base of the structure.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="ghana_project_imagesphoto_12.jpg" alt="Boundary Wall Construction" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 03</div>
-          <h3>Boundary Wall Construction</h3>
-          <p>
-            The compound wall is being built around the property, improving enclosure, security, and overall site definition.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="ghana_project_imagesphoto_05.jpg" alt="Column and Wall Formation" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 04</div>
-          <h3>Column and Wall Formation</h3>
-          <p>
-            Concrete columns and block walls are being developed together, defining the room layout and strengthening the structural frame.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="ghana_project_imagesphoto_04.jpg" alt="Beam and Slab Support Stage" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 05</div>
-          <h3>Beam and Slab Support Stage</h3>
-          <p>
-            Temporary timber supports are holding the formwork in place as the reinforced beam and upper slab system are prepared and cured.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="ghana_project_imagesphoto_06.jpg" alt="Perimeter Structural Framing" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 06</div>
-          <h3>Perimeter Structural Framing</h3>
-          <p>
-            This side view captures extensive timber support under the slab edge, showing active progress on the reinforced upper structure.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="ghana_project_imagesphoto_07.jpg" alt="Upper Wall Extension" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 07</div>
-          <h3>Upper Wall Extension</h3>
-          <p>
-            Workers continue lifting the wall height from an interior position, marking progress toward full enclosure of the upper level.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="IMG-20250721-WA0002.jpg" alt="Roof Truss Framing Close-Up" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 08</div>
-          <h3>Roof Truss Framing Close-Up</h3>
-          <p>
-            A closer look at the timber roof truss system reveals the scale and geometry of the framing before final roof covering is completed.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="IMG-20250721-WA0008.jpg" alt="Long-Distance Roofline View" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 09</div>
-          <h3>Long-Distance Roofline View</h3>
-          <p>
-            Taken from farther away, this image shows the roof structure emerging above the vegetation and gives a sense of the building’s visibility within the wider area.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="IMG-20250721-WA0000.jpg" alt="Exterior View with Boundary Wall" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 10</div>
-          <h3>Exterior View with Boundary Wall</h3>
-          <p>
-            This exterior angle shows the main building rising behind the compound wall, with the roof framing installed and the site still surrounded by natural vegetation.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="IMG-20250721-WA0005.jpg" alt="Front Compound Perspective" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 11</div>
-          <h3>Front Compound Perspective</h3>
-          <p>
-            This image captures the front approach to the house, showing the boundary wall, upper structure, and the relationship between the building and the surrounding site.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="IMG-20250721-WA0006.jpg" alt="Main Structure from Wider Exterior Angle" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 12</div>
-          <h3>Main Structure from Wider Exterior Angle</h3>
-          <p>
-            A broader exterior perspective shows the two-level massing of the building, the installed roof framing, and the unfinished landscape around the property.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="ghana_project_imagesphoto_02.jpg" alt="Front Structural View" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 13</div>
-          <h3>Front Structural View</h3>
-          <p>
-            The building shell is standing with the roof installed, showing the front elevation and the transition from structural work to enclosure.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="ghana_project_imagesphoto_03.jpg" alt="Main Building Elevation" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 14</div>
-          <h3>Main Building Elevation</h3>
-          <p>
-            This image shows the two-level structure from the front, highlighting the roofline, block walls, and open bays awaiting finishing work.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="ghana_project_imagesphoto_10.jpg" alt="Side Perspective of Main House" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 15</div>
-          <h3>Side Perspective of Main House</h3>
-          <p>
-            This angled view shows the house massing and roof structure, giving a broader sense of scale and the project footprint.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="ghana_project_imagesphoto_01.jpg" alt="Interior Wall Construction" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 16</div>
-          <h3>Interior Wall Construction</h3>
-          <p>
-            Masonry work is underway inside the structure, with workers using scaffolding to raise the upper wall sections and shape the internal layout.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="20251010_113856.jpg" alt="Interior Stair and Upper Level Progress" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 17</div>
-          <h3>Interior Stair and Upper Level Progress</h3>
-          <p>
-            This wide interior view highlights the staircase, upper gallery, exposed block walls, and roof framing, showing the structure at an active rough-construction stage.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="ghana_project_imagesphoto_09.jpg" alt="Balcony and Exterior Finish Progress" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 18</div>
-          <h3>Balcony and Exterior Finish Progress</h3>
-          <p>
-            The upper balcony rails and exterior plastered surfaces are in place, indicating movement into visible finishing stages.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="20251212_160513(0).jpg" alt="Ground Floor Finishing Progress" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 19</div>
-          <h3>Ground Floor Finishing Progress</h3>
-          <p>
-            A site visit photo showing a plastered wall section, structural columns, and stacked cement bags, reflecting progress toward interior finishing and surface preparation.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="IMG-20260327-WA0010-1.jpg" alt="Modern Gate Installation Closed View" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 20</div>
-          <h3>Modern Gate Installation</h3>
-          <p>
-            This image shows the completed compound gate in its closed position, featuring a modern black metal finish with warm accent strips that enhance both security and curb appeal.
-          </p>
-        </div>
-      </article>
-
-      <article class="photo-card">
-        <div class="photo-media">
-          <img src="IMG-20260327-WA0011.jpg" alt="Gate Open Position View" />
-        </div>
-        <div class="photo-content">
-          <div class="step">Photo 21</div>
-          <h3>Gate Open Position View</h3>
-          <p>
-            This view shows the gate slightly open, highlighting its functionality, swing clearance, and the improved accessibility of the main entrance to the property.
-          </p>
-        </div>
-      </article>
-    </section>
-
-    <div class="footer-note">
-      Project progress page for web sharing, presentations, or documentation use.
+  <!-- ── STAGE 03 ── -->
+  <div class="stage-block" data-s="3" id="ph-s3">
+    <div class="stage-label-row">
+      <div class="stage-badge s3-bg">● Stage 03</div>
+      <div class="stage-name">Structural Elevation &amp; Roofing</div>
+      <div class="stage-count">11 photos</div>
     </div>
-  </main>
+    <div class="pmason">
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="ghana_project_imagesphoto_07.jpg" alt="Upper Wall Extension" loading="lazy" />
+          <div class="poverlay"><p>Workers lifting wall height from interior — progress toward full enclosure of the upper level.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S03·A</span>
+          <span class="ptitle">Upper Wall Extension</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="IMG-20250721-WA0002.jpg" alt="Roof Truss Framing Close-Up" loading="lazy" />
+          <div class="poverlay"><p>Close-up of the timber roof truss system — scale and geometry of the framing before final covering.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S03·B</span>
+          <span class="ptitle">Roof Truss Framing</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="IMG-20250721-WA0008.jpg" alt="Long-Distance Roofline View" loading="lazy" />
+          <div class="poverlay"><p>Roof structure emerging above vegetation — the building's presence within the wider landscape.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S03·C</span>
+          <span class="ptitle">Long-Distance Roofline</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="IMG-20250721-WA0000.jpg" alt="Exterior with Boundary Wall" loading="lazy" />
+          <div class="poverlay"><p>Main building rising behind the compound wall, roof framing installed, surrounded by natural vegetation.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S03·D</span>
+          <span class="ptitle">Exterior with Boundary Wall</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="IMG-20250721-WA0005.jpg" alt="Front Compound Perspective" loading="lazy" />
+          <div class="poverlay"><p>Front approach showing boundary wall, upper structure, and building-to-site relationship.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S03·E</span>
+          <span class="ptitle">Front Compound Perspective</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="IMG-20250721-WA0006.jpg" alt="Wide Exterior Angle" loading="lazy" />
+          <div class="poverlay"><p>Broad view of the two-level massing, roof framing, and unfinished landscape around the property.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S03·F</span>
+          <span class="ptitle">Wide Exterior Angle</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="ghana_project_imagesphoto_02.jpg" alt="Front Structural View" loading="lazy" />
+          <div class="poverlay"><p>Building shell with roof installed — front elevation showing transition from structural to enclosure phase.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S03·G</span>
+          <span class="ptitle">Front Structural View</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="ghana_project_imagesphoto_03.jpg" alt="Main Building Elevation" loading="lazy" />
+          <div class="poverlay"><p>Two-level structure from the front — roofline, block walls, and open bays awaiting finishing work.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S03·H</span>
+          <span class="ptitle">Main Building Elevation</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="ghana_project_imagesphoto_10.jpg" alt="Side Perspective" loading="lazy" />
+          <div class="poverlay"><p>Angled view showing massing and roof structure — a broader sense of scale and footprint.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S03·I</span>
+          <span class="ptitle">Side Perspective</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="ghana_project_imagesphoto_01.jpg" alt="Interior Wall Construction" loading="lazy" />
+          <div class="poverlay"><p>Masonry inside the structure — scaffolding used to raise upper wall sections and shape the internal layout.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S03·J</span>
+          <span class="ptitle">Interior Wall Construction</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="20251010_113856.jpg" alt="Interior Stair and Upper Level" loading="lazy" />
+          <div class="poverlay"><p>Wide interior view: staircase, upper gallery, exposed block walls, and roof framing at rough-construction stage.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S03·K</span>
+          <span class="ptitle">Interior Stair &amp; Upper Level</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- connector -->
+  <div class="stage-connector">
+    <div class="conn-line"></div>
+    <div class="conn-arrow">Next phase</div>
+    <div class="conn-line"></div>
+  </div>
+
+  <!-- ── STAGE 04–06 ── -->
+  <div class="stage-block" data-s="46" id="ph-s46">
+    <div class="stage-label-row">
+      <div class="stage-badge s46-bg">● Stage 04–06</div>
+      <div class="stage-name">Finishing &amp; Gate Installation</div>
+      <div class="stage-count">4 photos</div>
+    </div>
+    <div class="pmason">
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="ghana_project_imagesphoto_09.jpg" alt="Balcony and Exterior Finish" loading="lazy" />
+          <div class="poverlay"><p>Upper balcony rails and plastered exterior surfaces in place — visible finishing stages now underway.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S04·A</span>
+          <span class="ptitle">Balcony &amp; Exterior Finish</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="20251212_160513(0).jpg" alt="Ground Floor Finishing" loading="lazy" />
+          <div class="poverlay"><p>Plastered walls, structural columns, and stacked cement bags — active preparation for interior finishing.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S04·B</span>
+          <span class="ptitle">Ground Floor Finishing</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="IMG-20260327-WA0010-1.jpg" alt="Modern Gate — Closed" loading="lazy" />
+          <div class="poverlay"><p>Completed compound gate — modern black metal with warm accent strips. Security and curb appeal combined.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S06·A</span>
+          <span class="ptitle">Modern Gate — Closed</span>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="pimg-wrap">
+          <img src="IMG-20260327-WA0011.jpg" alt="Gate — Open Position" loading="lazy" />
+          <div class="poverlay"><p>Gate open — showcasing functionality, swing clearance, and improved accessibility of the main entrance.</p></div>
+        </div>
+        <div class="pfoot">
+          <span class="pnum">S06·B</span>
+          <span class="ptitle">Gate — Open Position</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /photo-wrap -->
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">Construction <span>Progress</span> Journal</div>
+    <div class="footer-chips">
+      <span class="fchip">Sharing</span>
+      <span class="fchip">Documentation</span>
+      <span class="fchip">Project updates</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const pills = document.querySelectorAll('.snp');
+  pills.forEach(p => {
+    p.addEventListener('click', () => {
+      pills.forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+    });
+  });
+</script>
+
 </body>
 </html>
